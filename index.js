@@ -3,7 +3,10 @@ dotenv.config();
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const { middleware1 } = require('./middleware/middleware1')
+
 const connectToMongoDB = require('./db');
+
 
 const app = express();
 
@@ -23,12 +26,12 @@ app.get('/', (req, res, next) => {
 
 });
 
-function middleware1(req, res, next) {
-  req.customProp = 100;
-  console.log('middleware1');
-  console.log(`custom prop: ${req.customProp}`)
-  next();
-}
+// function middleware1(req, res, next) {
+//   req.customProp = 100;
+//   console.log('middleware1');
+//   console.log(`custom prop: ${req.customProp}`)
+//   next();
+// }
 
 function middleware2(req, res, next) {
   console.log('middleware2');
