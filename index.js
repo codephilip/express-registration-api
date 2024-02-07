@@ -6,12 +6,21 @@ const bodyParser = require('body-parser');
 const connectToMongoDB = require('./db');
 
 const app = express();
-app.use(bodyParser.json());
 
-app.get('/', middleware1, standardExpressCallback);
+//global middlware
+app.use(bodyParser.json());
+app.use(middleware1);
+
+
+app.get('/', standardExpressCallback);
 
 function middleware1(req, res, next) {
   console.log('middleware1');
+  next();
+}
+
+function middleware2(req, res, next) {
+  console.log('middleware2');
   next();
 }
 
