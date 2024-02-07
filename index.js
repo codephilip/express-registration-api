@@ -13,10 +13,9 @@ app.use(middleware1);
 app.use(middleware2);
 
 function errorHandler(err, req, res, next) {
-  if (err) {
-    res.send('<h1>Error here</h1>');
-  }
+  res.json({ err: err })
 };
+
 
 app.get('/', (req, res, next) => {
   console.log('I am standard express function.')
@@ -35,7 +34,8 @@ function middleware2(req, res, next) {
   console.log('middleware2');
   req.customProp = 600;
   console.log(`custom prop: ${req.customProp}`)
-  next();
+  const newErr = new Error('its a Error.')
+  next(newErr);
 }
 
 // function standardExpressCallback(requestObject, responseObject, nextMiddleware) {
