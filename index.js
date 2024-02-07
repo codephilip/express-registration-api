@@ -10,9 +10,11 @@ const app = express();
 //global middlware
 app.use(bodyParser.json());
 app.use(middleware1);
+app.use(middleware2);
 
-
-app.get('/', standardExpressCallback);
+app.get('/', (req, res, next) => {
+  console.log('hi!')
+});
 
 function middleware1(req, res, next) {
   console.log('middleware1');
@@ -24,11 +26,10 @@ function middleware2(req, res, next) {
   next();
 }
 
-function standardExpressCallback(requestObject, responseObject, nextMiddleware) {
-  console.log('standardExpressCallback');
-  responseObject.send('<h1>Success!!</h1>');
-
-}
+// function standardExpressCallback(requestObject, responseObject, nextMiddleware) {
+//   console.log('standardExpressCallback');
+//   responseObject.send('<h1>Success!!</h1>');
+// }
 
 //db connection
 connectToMongoDB();
