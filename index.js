@@ -12,6 +12,12 @@ app.use(bodyParser.json());
 app.use(middleware1);
 app.use(middleware2);
 
+function errorHandler(err, req, res, next) {
+  if (err) {
+    res.send('<h1>Error here</h1>');
+  }
+};
+
 app.get('/', (req, res, next) => {
   console.log('I am standard express function.')
   res.send('<h1>Success!</h1>')
@@ -24,7 +30,8 @@ function middleware1(req, res, next) {
 
 function middleware2(req, res, next) {
   console.log('middleware2');
-  next();
+  const objErr = new Error('tragic error.');
+  next(objErr);
 }
 
 // function standardExpressCallback(requestObject, responseObject, nextMiddleware) {
