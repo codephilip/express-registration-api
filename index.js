@@ -13,7 +13,7 @@ app.use(middleware1);
 app.use(middleware2);
 
 app.get('/', (req, res, next) => {
-  console.log('hi!')
+  console.log('I am standard express function.')
   res.send('<h1>Success!</h1>')
 });
 
