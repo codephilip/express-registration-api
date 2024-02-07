@@ -20,18 +20,22 @@ function errorHandler(err, req, res, next) {
 
 app.get('/', (req, res, next) => {
   console.log('I am standard express function.')
-  res.send('<h1>Success!</h1>')
+  res.send(`<h1>Success! CustomProp: ${req.customProp}</h1>`)
+
 });
 
 function middleware1(req, res, next) {
+  req.customProp = 100;
   console.log('middleware1');
+  console.log(`custom prop: ${req.customProp}`)
   next();
 }
 
 function middleware2(req, res, next) {
   console.log('middleware2');
-  const objErr = new Error('tragic error.');
-  next(objErr);
+  req.customProp = 600;
+  console.log(`custom prop: ${req.customProp}`)
+  next();
 }
 
 // function standardExpressCallback(requestObject, responseObject, nextMiddleware) {
