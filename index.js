@@ -20,6 +20,18 @@ function errorHandler(err, req, res, next) {
 };
 
 
+
+app.use(session({
+  secret: 'some secret',
+  resave: false,
+  saveUninitialized: true,
+  store: sessionStore,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 //1 day
+  }
+}))
+
+
 app.get('/', (req, res, next) => {
   console.log('I am standard express function.')
   res.send(`<h1>Success! CustomProp: ${req.customProp}</h1>`)
