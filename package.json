@@ -4,7 +4,6 @@
   "description": "registration and login service",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js"
   },
   "author": "codephilip",
@@ -15,6 +14,7 @@
   },
   "dependencies": {
     "express": "^4.18.2",
-    "mongodb": "^6.3.0"
+    "mongodb": "^6.3.0",
+    "passport-google-oauth20": "^2.0.0"
   }
 }

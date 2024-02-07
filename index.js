@@ -6,8 +6,11 @@ const bodyParser = require('body-parser');
 const connectToMongoDB = require('./db');
 
 const app = express();
-
 app.use(bodyParser.json());
+
+app.get('/', (req, res, next) => {
+  res.send('success.')
+})
 
 //db connection
 connectToMongoDB();
