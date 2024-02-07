@@ -8,14 +8,23 @@ const connectToMongoDB = require('./db');
 const app = express();
 app.use(bodyParser.json());
 
-app.get('/', (req, res, next) => {
-  res.send('success.')
-})
+app.get('/', middleware1, standardExpressCallback);
+
+function middleware1(req, res, next) {
+  console.log('middleware1');
+  next();
+}
+
+function standardExpressCallback(requestObject, responseObject, nextMiddleware) {
+  console.log('standardExpressCallback');
+  responseObject.send('<h1>Success!!</h1>');
+
+}
 
 //db connection
 connectToMongoDB();
 
-
+app.listen(3001);
 
 
 
