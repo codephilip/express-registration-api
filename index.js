@@ -14,6 +14,7 @@ app.use(middleware2);
 
 app.get('/', (req, res, next) => {
   console.log('hi!')
+  res.send('<h1>Success!</h1>')
 });
 
 function middleware1(req, res, next) {
