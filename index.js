@@ -11,7 +11,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(middleware1);
 app.use(middleware2);
-
+app.use(errorHandler);
 function errorHandler(err, req, res, next) {
   if (err) {
     res.send('<h1>Error here</h1>');
