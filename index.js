@@ -2,11 +2,11 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const express = require('express');
+var session = require('express-session')
 const bodyParser = require('body-parser');
 const { middleware1 } = require('./middleware/middleware1')
 
 const connectToMongoDB = require('./db');
-
 
 const app = express();
 
