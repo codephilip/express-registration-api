@@ -1,6 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const connection = require('./database');
+const connection = require('./db');
 const User = connection.models.User;
 const validPassword = require('../lib/passwordUtils').validPassword;
 
@@ -15,22 +15,22 @@ const verifyCallback = (username, password, done) => {
         .then((user) => {
 
             if (!user) { return done(null, false) }
-            
+
             const isValid = validPassword(password, user.hash, user.salt);
-            
+
             if (isValid) {
                 return done(null, user);
             } else {
                 return done(null, false);
             }
         })
-        .catch((err) => {   
+        .catch((err) => {
             done(err);
         });
 
 }
 
-const strategy  = new LocalStrategy(customFields, verifyCallback);
+const strategy = new LocalStrategy(customFields, verifyCallback);
 
 passport.use(strategy);
 

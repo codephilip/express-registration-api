@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const passport = require('passport');
 const genPassword = require('../lib/passwordUtils').genPassword;
-const connection = require('../config/database');
+const connection = require('../config/db');
 const User = connection.models.User;
-const isAuth = require('./authMiddleware').isAuth;
-const isAdmin = require('./authMiddleware').isAdmin;
+const isAuth = require('../middleware/authMiddleware').isAuth;
+const isAdmin = require('../middleware/authMiddleware').isAdmin;
 
 /**
  * -------------- POST ROUTES ----------------
