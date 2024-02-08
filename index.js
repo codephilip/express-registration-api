@@ -2,34 +2,56 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const express = require('express');
-var session = require('express-session')
+const mongoose = require('mongoose');
+const session = require('express-session');
+
+const MongoStore = require('connect-mongo');
+
 const bodyParser = require('body-parser');
 const { middleware1 } = require('./middleware/middleware1')
 
-const connectToMongoDB = require('./db');
-
+//const connectToMongoDB = require('./db');
 const app = express();
 
+const dbString = process.env.MONGO_URI;
+const dbOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}
+
+const connection = mongoose.createConnection(dbString, dbOptions);
+
 //global middlware
+app.use(express.json)
+app.use(express.urlencoded({ extended: true }));
+
 app.use(bodyParser.json());
 app.use(middleware1);
 app.use(middleware2);
 
+
+//const sessionStore = new MongoStore({
+//  mongooseConnection: connection,
+//  collection: 'users'
+//});
+
+app.use(session({
+  store: MongoStore.create({ mongoUrl: process.env.MONGO_URI })
+}));
+
+// app.use(session({
+//   secret: 'some secret',
+//   resave: false,
+//   saveUninitialized: true,
+//   store: sessionStore,
+//   cookie: {
+//     maxAge: 1000 * 60 * 60 * 24
+//   }
+// }));
+
 function errorHandler(err, req, res, next) {
   res.json({ err: err })
 };
-
-
-
-app.use(session({
-  secret: 'some secret',
-  resave: false,
-  saveUninitialized: true,
-  store: sessionStore,
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24 //1 day
-  }
-}))
 
 
 app.get('/', (req, res, next) => {
@@ -59,7 +81,7 @@ function middleware2(req, res, next) {
 // }
 
 //db connection
-connectToMongoDB();
+//connectToMongoDB();
 
 //global errorhandler
 app.use(errorHandler);
