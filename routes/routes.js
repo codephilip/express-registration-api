@@ -42,7 +42,6 @@ router.get('/', (req, res, next) => {
     res.send('<h1>Home</h1><p>Please <a href="/register">register</a></p>');
 });
 
-// When you visit http://localhost:3000/login, you will see "Login Page"
 router.get('/login', (req, res, next) => {
 
     const form = '<h1>Login Page</h1><form method="POST" action="/login">\
@@ -54,7 +53,6 @@ router.get('/login', (req, res, next) => {
 
 });
 
-// When you visit http://localhost:3000/register, you will see "Register Page"
 router.get('/register', (req, res, next) => {
 
     const form = '<h1>Register Page</h1><form method="post" action="register">\

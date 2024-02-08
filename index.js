@@ -5,6 +5,7 @@ var passport = require('passport');
 var crypto = require('crypto');
 var routes = require('./routes/routes');
 const connection = require('./config/db');
+const helmet = require('helmet');
 
 // Package documentation - https://www.npmjs.com/package/connect-mongo
 const MongoStore = require('connect-mongo');
@@ -21,7 +22,7 @@ var app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(helmet())
 
 /**
  * -------------- SESSION SETUP ----------------
@@ -46,7 +47,7 @@ app.use(session({
  * -------------- PASSPORT AUTHENTICATION ----------------
  */
 
-// Need to require the entire Passport config module so app.js knows about it
+// Need to require the entire Passport config module so index.js knows about it
 require('./config/passport');
 
 app.use(passport.initialize());
@@ -70,5 +71,5 @@ app.use(routes);
  * -------------- SERVER ----------------
  */
 
-// Server listens on http://localhost:3000
+// Server listens on http://localhost:3001
 app.listen(3001);
