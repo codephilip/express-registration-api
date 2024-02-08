@@ -37,9 +37,19 @@ app.use(session({
 
 app.get('/', (req, res, next) => {
   console.log('hi')
+  console.log(req.session);
+
+  if (req.session.viewCount) {
+    req.session.viewCount++;
+  } else {
+    req.session.viewCount = 1;
+  }
+
   res.send(
-    '<h1>hello</h1>'
+    `<h1>hello</h1>
+      <h2>You have visted ${req.session.viewCount} times</h2>`
   )
+
 })
 
 // Routes and error handler...
