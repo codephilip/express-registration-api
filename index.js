@@ -12,6 +12,7 @@ const morgan = require('morgan');
 const compression = require('compression');
 const csurf = require('csurf');
 const flash = require('connect-flash');
+//implement more sophisticated rate limiting
 const rateLimit = require('express-rate-limit');
 
 require('dotenv').config();
