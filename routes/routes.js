@@ -81,13 +81,17 @@ router.get('/admin-route', isAdmin, (req, res, next) => {
 });
 
 // Visiting this route logs the user out
-router.get('/logout', (req, res, next) => {
-    req.logout();
-    res.redirect('/protected-route');
+router.get('/logout', function (req, res) {
+    req.logout(function (err) {
+        if (err) { return next(err); }
+        res.redirect('/');
+    });
 });
 
 router.get('/login-success', (req, res, next) => {
-    res.send('<p>You successfully logged in. --> <a href="/protected-route">Go to protected route</a></p>');
+    res.send('<p>You successfully logged in. --> <a href="/protected-route">Go to protected route</a></p>' +
+        '<p> <a href="/admin-route">Go to admin route</a></p>' +
+        '<p><a href="/logout">Logout</a></p>');
 });
 
 router.get('/login-failure', (req, res, next) => {
