@@ -7,6 +7,9 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const bodyParser = require('body-parser');
 const { middleware1 } = require('./middleware/middleware1');
+
+const passport = require('passport');
+const crypto = require('crypto');
 // Assuming middleware2 is defined elsewhere or uncomment its definition below
 
 const app = express();
@@ -29,7 +32,7 @@ app.use(session({
   secret: 'some secret', // This should be a random secret for production
   resave: false,
   saveUninitialized: true,
-  store: MongoStore.create({ mongoUrl: dbString }), // Corrected to use MongoStore.create
+  store: MongoStore.create({ mongoUrl: dbString, collectionName: 'users' }), // Corrected to use MongoStore.create
   cookie: {
     maxAge: 1000 * 60 * 60 * 24 // Example: 24 hours
   }
@@ -42,7 +45,7 @@ app.get('/', (req, res, next) => {
   if (req.session.viewCount) {
     req.session.viewCount++;
   } else {
-    req.session.viewCount = 1;
+    req.session.viewCount = 1
   }
 
   res.send(
