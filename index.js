@@ -1,29 +1,27 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
-var passport = require('passport');
-var crypto = require('crypto');
-var routes = require('./routes/routes');
+const passport = require('passport');
+const crypto = require('crypto');
+const routes = require('./routes/routes');
 const connection = require('./config/db');
 const helmet = require('helmet');
-
-// Package documentation - https://www.npmjs.com/package/connect-mongo
 const MongoStore = require('connect-mongo');
+const cors = require('cors');
+const morgan = require('morgan');
+const compression = require('compression');
+const csurf = require('csurf');
+const flash = require('connect-flash');
+const rateLimit = require('express-rate-limit');
 
-/**
- * -------------- GENERAL SETUP ----------------
- */
-
-// Gives us access to variables set in the .env file via `process.env.VARIABLE_NAME` syntax
 require('dotenv').config();
 
-// Create the Express application
 var app = express();
 
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use(helmet())
+app.use(helmet());
 // app.use(helmet({
 //   contentSecurityPolicy: {
 //     directives: {
@@ -34,11 +32,9 @@ app.use(helmet())
 //     },
 //   },
 // }));
-/**
- * -------------- SESSION SETUP ----------------
- */
-
-//const sessionStore = new MongoStore({ mongooseConnection: connection, collection: 'users' });
+app.use(cors()); // Configure as needed for your environment
+app.use(morgan('dev')); // 'dev' for development, 'common' for production
+app.use(compression());
 
 app.use(session({
   secret: process.env.SECRET,
@@ -46,40 +42,43 @@ app.use(session({
   saveUninitialized: true,
   store: MongoStore.create({
     mongoUrl: process.env.MONGO_URI,
-    // Additional options like ttl (time to live), autoRemove, etc. can be specified here
   }),
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24 // Equals 1 day (1 day * 24 hr/1 day * 60 min/1 hr * 60 sec/1 min * 1000 ms / 1 sec)
+    maxAge: 1000 * 60 * 60 * 24 // 1 day
   }
 }));
 
-/**
- * -------------- PASSPORT AUTHENTICATION ----------------
- */
+// Rate limiter
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
 
-// Need to require the entire Passport config module so index.js knows about it
+// Passport authentication
 require('./config/passport');
-
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(flash()); // After session middleware
+app.use(csurf({ cookie: true })); // CSRF protection
+
+// Global middleware to make the flash messages and CSRF token available to all templates
+app.use((req, res, next) => {
+  res.locals.messages = req.flash();
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
+// Logging middleware to console log the session and user details
 app.use((req, res, next) => {
   console.log(req.session);
   console.log(req.user);
   next();
 });
 
-/**
- * -------------- ROUTES ----------------
- */
-
-// Imports all of the routes from ./routes/index.js
+// Routes
 app.use(routes);
 
-
-/**
- * -------------- SERVER ----------------
- */
-
-// Server listens on http://localhost:3001
-app.listen(3001);
+// Server
+app.listen(3001, () => console.log('Server running on http://localhost:3001'));
